@@ -1,0 +1,69 @@
+
+<!-- Создать простое приложение, которое импортирует все коммиты из репозитории на github.
+
+Функционал: 
+На главной странице приложения вы вводите имя пользователя на гитхаб и его репозиторий и инициируете импорт.
+Пример данных для импорта для пользователя thoughtbot и репозитория guides: https://api.github.com/repos/thoughtbot/guides/commits
+Поля таблицы
+дата коммита, user_id, user_email, user_name, хеш коммита, описание коммита
+Результат импорта вывести в виде таблицы с постраничной разбивкой. -->
+
+<!DOCTYPE html>
+<html ng-app="gitApp">
+	<head>
+		<title>Git</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<link rel="stylesheet" type="text/css" href="lib/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+		<script type="text/javascript" src="lib/angular.min.js"></script>
+		<script type="text/javascript" src="js/app.js"></script>
+		<script type="text/javascript" src="js/main_controller.js"></script>
+		<script type="text/javascript" src="lib/jQuery.js"></script>
+		<script type="text/javascript" src="lib/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+	   	<meta charset="utf-8">
+	</head>
+	<body ng-controller="MainController">
+		
+		<div class="container">
+			<h1 class="text-center"> Marina Gernyak (Git-task)</h1>
+			<div>
+				<div class="row">
+					<div class="col-md-5">
+						<input type="text" class="form-control" placeholder="Введите NickName on Git" ng-model="nickName">
+					</div>
+					<div class="col-md-5">
+						<input type="text" class="form-control" placeholder="Введите название репозитория" ng-model="nameRepos">
+					</div>
+					<div class="col-md-2">
+						<button class="btn btn-primary btn-block" ng-click="import()">Отправить</button>
+					</div>
+				</div>
+				<br>
+				<table class="table table-bordered table-striped">
+					<tr>
+						<td class="active">Date commit</td>
+						<td class="success">Description repos</td>
+						<td class="info">User_email</td>
+						<td class="warning">User_name</td>
+						<td class="danger">Sha commit</td>
+					</tr>
+					<tr ng-repeat="item in commits">
+						<td>{{item.commit.committer.date| date: "yyyy-MM-dd" }}</td>
+						<td>{{item.commit.message}}</td>
+						<td>{{item.commit.committer.email}}</td>
+						<td>{{item.commit.committer.name}}</td>
+						<td>{{item.sha | limitTo: 7}}</td>
+					</tr>
+				</table>
+				<div class="text-center" ng-hide="linkUrl2 == 1">
+					<nav aria-label="...">
+						<ul class="pagination">
+							<li ng-class="{'disabled': currentPage==1}" ng-click="goTo(currentPage-1)"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+							<li ng-repeat="item in pagination(linkUrl2) track by $index" ng-class="{'active': currentPage == $index +1 }"><a href="#" ng-click="goTo($index+1)" >{{$index + 1}} <span class="sr-only">(current)</span></a></li>
+						    <li ng-click="goTo(currentPage+1)" ng-class="{'disabled': currentPage==linkUrl2}"><a href="#" aria-label="Previous"><span aria-hidden="true">&raquo;</span></a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
